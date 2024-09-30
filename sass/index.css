@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 62.5%= 10px なので、16pxにしたいときは1.6remにする */
+html {
+    font-size: 62.5%;
+    font-family: "IBM Plex Sans JP", system-ui;
+    font-weight: 500;
+    font-style: normal;
+}

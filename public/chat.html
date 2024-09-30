@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Cactus+Classical+Serif&family=IBM+Plex+Sans+JP:wght@100;200;300;400;500;600;700&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <title>WebSocket Chat Client</title>
+</head>
+
+<body>
+  <h1>WebSocket チャットクライアント</h1>
+  <input id="message" type="text" placeholder="メッセージを入力" />
+  <button onclick="sendMessage()">送信</button>
+  <button onclick="disconnect()">切断する</button>
+
+  <ul id="messages"></ul>
+
+  <style>
+    #messages {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .received {
+      background-color: #f0f0f0;
+      text-align: left;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+      max-width: 60%;
+    }
+
+    .sent {
+      background-color: #d0f0d0;
+      text-align: right;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+      max-width: 60%;
+      margin-left: auto;
+    }
+  </style>
+
+  <script>
+    const ws = new WebSocket('ws://localhost:5000');
+
+    ws.onopen = () => {
+      console.log('サーバーに接続しました');
+    };
+
+    ws.onmessage = (event) => {
+      const messages = document.getElementById('messages');
+      const message = document.createElement('li');
+      message.textContent = `サーバー: ${event.data}`;
+      message.className = 'received';
+      messages.appendChild(message);
+    };
+
+    ws.onclose = (event) => {
+      if (event.wasClean) {
+        console.log('正常に接続が切れました');
+      } else {
+        console.error('接続が予期せず切断されました');
+      }
+      alert('サーバーとの接続が切れました。');
+    };
+    // sendMessage関数
+    function sendMessage() {
+      // エラーハンドリング
+      try {
+        const input = document.getElementById('message');
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(input.value);
+          const messages = document.getElementById('messages');
+          const message = document.createElement('li');
+          message.textContent = `自分: ${input.value}`;
+          message.className = 'sent';
+          messages.appendChild(message);
+          input.value = '';
+        } else {
+          alert('接続されていません。');
+        }
+      } catch (error) {
+        console.error('メッセージ送信中にエラーが発生しました:', error);
+      }
+    }
+
+    function disconnect() {
+      ws.close();
+    }
+
+  </script>
+</body>
+
+</html>
