@@ -2,6 +2,10 @@
 require('dotenv').config();
 // expressをインポート
 const express = require('express');
+// register.jsをインポート
+const registerRouter = require('./routes/register');
+// session.jsをインポート
+const { sessionMiddleware, isLoggedIn } = require('./db/session');
 // upload.jsをインポート
 const upload = require('./admin/upload');
 
@@ -19,6 +23,8 @@ const { error } = require('console');
 // Expressアプリケーションを作成
 const app = express();
 
+// セッションミドルウェアを設定
+app.use(sessionMiddleware);
 
 // 環境変数取得 設定されていなければ3000を使用
 const port = process.env.PORT || 3000;
@@ -32,8 +38,28 @@ app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
 // ルートパスにアクセスしたときにindex.htmlを返す
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  const filePath = path.join(__dirname, 'public', 'index.html');
+  console.log(`Serving file from: ${filePath}`);
+
+  // ファイルの存在確認
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error(`${filePath} does not exist`);
+      res.status(404).send('File not found');
+    } else {
+      console.log(`${filePath} exists`);
+      // ファイルを送信
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          console.error(`Error sending file: ${err}`);
+          res.status(err.status).end();
+        }
+      });
+    }
+  });
 });
+
+
 
 // 画像アップロードのエンドポイント
 app.post('/upload', upload.single('image'), (req, res) => {
@@ -44,6 +70,24 @@ app.post('/upload', upload.single('image'), (req, res) => {
     res.status(400).send('無効なファイルタイプです')
   }  
 });
+
+
+
+
+// registerのルート
+app.use('/register', registerRouter);
+
+// 認証が必要なルート
+
+// chat画面へのルート
+app.get('/chat', isLoggedIn, (req, res) => {
+  res.sendFile(path.join(__dirname, 'protected', 'chat.html'));
+});
+
+// マイルーム画面へのルート
+app.get('/myroom', isLoggedIn, (req, res) => {
+  res.sendFile(path.join(__dirname, 'protected', 'myroom.html'));
+})
 
 // HTTPサーバーの設定
 const server = http.createServer(app);

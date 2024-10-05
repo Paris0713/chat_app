@@ -9,12 +9,53 @@
     <link
         href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Cactus+Classical+Serif&family=IBM+Plex+Sans+JP:wght@100;200;300;400;500;600;700&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&display=swap"
         rel="stylesheet">
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="./sass/index.css">
 
     <title>Chat-App</title>
 </head>
 
 <body>
-    <a href="./chat.html">chat</a>
+
+
+    <section class="layout">
+        <div class="header">
+            <h1 class="title">CHAT APP</h1>
+        </div>
+        <div class="main">
+            <div class="signin-form">
+
+                <div class="signin-username">
+                    <label for="username">Username</label>
+                    <input type="text" id="signin-username" placeholder="USERNAME" />
+                </div>
+                <div class="signin-password">
+                    <label for="password">Password</label>
+                    <input type="password" id="signin-password" placeholder="PASSWORD" />
+                </div>
+                <div class="signin-btn">
+                    <button type="submit" id="signin-btn">Sign In</button>
+                </div>
+
+                <nav class="links">
+                    <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+                    <a href="signup.html" class="signup-link">Sign Up</a>
+
+                </nav>
+
+
+            </div>
+
+
+
+        </div>
+        <div class="footer">
+            <p>&copy; Paris</p>
+        </div>
+    </section>
+
+    <script src="./js/signin.js"></script>
 </body>
 
 </html>

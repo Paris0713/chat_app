@@ -1,0 +1,135 @@
+@charset "utf-8";
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 62.5%= 10px なので、16pxにしたいときは1.6remにする */
+html {
+    font-size: 62.5%;
+    font-family: "IBM Plex Sans JP", system-ui;
+    font-weight: 500;
+    font-style: normal;
+    color: #433d3c;
+}
+
+
+a {
+     /* 親要素の装飾を継承 */
+    color: #433d3c; 
+    text-decoration: none;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fbfaf5;
+    color: #433d3c;
+}
+
+.layout {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: grid;
+    grid:
+        "header" 10% "main" 80% "footer" 10% / 1fr;
+    gap: 0.8rem;
+}
+
+.header {
+    grid-area: header;
+
+}
+.title {
+    margin: 2rem auto 3rem 5rem;
+    font-size: 3rem;
+}
+
+.main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-transform: uppercase;
+    color: #fbfaf5;
+
+}
+
+.signin-form > div {
+    height: 10rem;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center    
+  }
+;
+
+  .signin-form label {
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+    color: #fbfaf5; /* ラベルの色を設定 */
+  }
+  
+  .signin-username {
+    background-color: #80aba9;
+    text-align: center;
+  }
+  
+
+  .signin-password {
+    background-color: #474b42;
+  }
+  .signin-btn {
+    background-color: #f8e58c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .signin-btn button {
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+.footer {
+    grid-area: footer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.footer p {
+    text-align: center;
+}
