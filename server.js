@@ -2,10 +2,15 @@
 require("dotenv").config();
 // expressをインポート
 const express = require("express");
-// register.jsをインポート
-const registerRouter = require("./routes/register");
+// データベース接続をインポート
+const connection = require("./db/connection");
 // session.jsをインポート
 const { sessionMiddleware, isLoggedIn } = require("./db/session");
+// register.jsをインポート
+const registerRouter = require("./routes/register");
+// signinRoutes.jsをインポート
+const signinRouter = require("./routes/signinRoute");
+
 // upload.jsをインポート
 const upload = require("./admin/upload");
 // winstonとmorganをインポート
@@ -36,6 +41,7 @@ const logger = winston.createLogger({
 // Expressアプリケーションを作成
 const app = express();
 
+// logsフォルダの作成
 const logDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
@@ -47,6 +53,19 @@ app.use(
     stream: { write: (message) => logger.info(message.trim()) },
   })
 );
+
+
+// JSONボディをパースするミドルウェアを設定
+app.use(express.json());
+
+
+// Content Security Policy (CSP)の設定
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; require-trusted-types-for 'script'; trusted-types 'myPolicy' 'goog#html' 'AGPolicy';");
+  next();
+});
+
+
 
 
 // セッションミドルウェアを設定
@@ -85,6 +104,25 @@ app.get("/", (req, res) => {
   });
 });
 
+
+// registerのルート
+app.use("/register", registerRouter);
+
+// signinのルート
+app.use("/signin", signinRouter);
+
+
+// 認証が必要なルート
+// chat画面へのルート
+app.get("/chat", isLoggedIn, (req, res) => {
+  res.sendFile(path.join(__dirname, "protected", "chat.html"));
+});
+
+// マイルーム画面へのルート
+app.get("/myroom", isLoggedIn, (req, res) => {
+  res.sendFile(path.join(__dirname, "protected", "myroom.html"));
+});
+
 // 画像アップロードのエンドポイント
 app.post("/upload", upload.single("image"), (req, res) => {
   if (req.file) {
@@ -97,20 +135,6 @@ app.post("/upload", upload.single("image"), (req, res) => {
   }
 });
 
-// registerのルート
-app.use("/register", registerRouter);
-
-// 認証が必要なルート
-
-// chat画面へのルート
-app.get("/chat", isLoggedIn, (req, res) => {
-  res.sendFile(path.join(__dirname, "protected", "chat.html"));
-});
-
-// マイルーム画面へのルート
-app.get("/myroom", isLoggedIn, (req, res) => {
-  res.sendFile(path.join(__dirname, "protected", "myroom.html"));
-});
 
 // HTTPサーバーの設定
 const server = http.createServer(app);

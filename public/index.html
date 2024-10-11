@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -14,6 +16,22 @@
     <link rel="stylesheet" href="./sass/index.css">
 
     <title>Chat-App</title>
+
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; require-trusted-types-for 'script'; trusted-types 'myPolicy' 'goog#html' 'AGPolicy';">
+    <script>
+        // Trusted Typesポリシーを作成
+        const policy = trustedTypes.createPolicy('myPolicy', {
+            createScript: (input) => input,
+        });
+
+        // Trusted Typesを使用してスクリプトを作成
+        const scriptContent = policy.createScript("console.log('This is a trusted script');");
+        const scriptElement = document.createElement('script');
+        scriptElement.text = scriptContent;
+        document.head.appendChild(scriptElement);
+    </script>
+
 </head>
 
 <body>
@@ -25,31 +43,30 @@
         </div>
         <div class="main">
             <div class="signin-form">
-
-                <div class="signin-username">
-                    <label for="username">Username</label>
-                    <input type="text" id="signin-username" placeholder="USERNAME" />
-                </div>
-                <div class="signin-password">
-                    <label for="password">Password</label>
-                    <input type="password" id="signin-password" placeholder="PASSWORD" />
-                </div>
-                <div class="signin-btn">
-                    <button type="submit" id="signin-btn">Sign In</button>
-                </div>
-
-                <nav class="links">
-                    <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
-                    <a href="signup.html" class="signup-link">Sign Up</a>
-
-                </nav>
-
-
+                <form id="signinForm" action="/signin" method="POST">
+                    <div class="signin-username">
+                        <label for="signin-username">Username</label>
+                        <input type="text" id="signin-username" name="username" placeholder="USERNAME" />
+                    </div>
+                    <div class="signin-password">
+                        <label for="signin-password">Password</label>
+                        <input type="password" id="signin-password" name="password" placeholder="PASSWORD" />
+                    </div>
+                    <div class="signin-btn">
+                        <button type="submit" id="signin-btn">Sign In</button>
+                    </div>
             </div>
 
+            <nav class="links">
+                <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+                <a href="signup.html" class="signup-link">Sign Up</a>
+
+            </nav>
 
 
         </div>
+
+
         <div class="footer">
             <p>&copy; Paris</p>
         </div>

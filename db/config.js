@@ -1,14 +1,14 @@
-const mysql = require('mysql');
+require('dotenv').config();
+
 
 // データベース情報
 const dbConfig = {
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'chat_app'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 };
 
-// createConnectionメソッドを使用してデータベース接続を作成
-const connection = mysql.createConnection(dbConfig);
 
+// モジュールとしてエクスポート
 module.exports = dbConfig;

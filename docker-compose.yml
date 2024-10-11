@@ -20,7 +20,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: chat_app
-      MYSQL_USER: root
+      # MYSQL_USER: root
       # MYSQL_PASSWORD: root
     volumes:
       - db_data:/var/lib/mysql
@@ -29,9 +29,15 @@ services:
     image: phpmyadmin/phpmyadmin
     ports:
       - "8083:80"
+    volumes:
+      - ./config.secret.inc.php:/etc/phpmyadmin/config.secret.inc.php   
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: root
+      SESSION_SECRET: ${SESSION_SECRET}
+    command: >
+      sh -c "echo 'ServerName localhost' >> 
+      /etc/apache2/apache2.conf && apache2-foreground"
 
 networks:
   default:

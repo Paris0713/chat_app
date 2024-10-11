@@ -62,7 +62,8 @@ async function handleSignup(event) {
     const responseData = await response.json();
     if (response.ok) {
       console.log("登録成功:", responseData);
-      window.location.href = "/myroom.html";
+      console.log("リダイレクト先: /myroom");
+      window.location.href = "/myroom";
     } else {
       console.error("登録失敗:", responseData);
       // ページにエラーメッセージを表示させる
