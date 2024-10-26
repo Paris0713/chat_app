@@ -62,57 +62,55 @@ body {
     display: flex;
     flex-direction: column;
     width: 400px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: 0 auto; /* 中央に配置 */
     text-transform: uppercase;
-    color: #fbfaf5;
-
 }
 
-.signin-form > div {
-    height: 10rem;
+.signinform {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+.signinform > div {
+    height: 10rem; /* 高さを自動に */
     width: 100%;
-    position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .links {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center    
-  }
-;
+    flex-direction: column; /* ラベルを上に配置するために、方向を縦に */
+    justify-content: center; 
+    align-items: center; 
+}
 
-  .signin-form label {
-    display: block;
+.signin-form label {
     font-size: 1.2em;
-    margin-bottom: 0.5em;
-    color: #fbfaf5; /* ラベルの色を設定 */
-  }
-  
-  .signin-username {
-    background-color: #80aba9;
-    text-align: center;
-  }
-  
+    margin-bottom: 0.5em; /* ラベルと入力フィールドの間の余白 */
+    color: #fbfaf5; 
+}
 
-  .signin-password {
+
+.signin-username, .signin-password {
+    background-color: #80aba9;
+    text-align: center; 
+    padding: 1rem; /* パディングを追加 */
+    
+}
+
+.signin-password {
     background-color: #474b42;
-  }
-  .signin-btn {
+}
+
+.signin-btn {
     background-color: #f8e58c;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .signin-btn button {
+    padding: 1rem; /* パディングを追加 */
+    
+}
+
+.signin-btn button {
     font-size: 1em;
     cursor: pointer;
     border: none;
@@ -120,7 +118,7 @@ body {
     color: inherit;
     text-transform: uppercase;
     text-align: center;
-  }
+}
 
 .footer {
     grid-area: footer;

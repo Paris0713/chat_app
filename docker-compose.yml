@@ -1,47 +1,42 @@
-version: '3.8'
-
 services:
   app:
     build: .
     ports:
-      # HTTPサーバー
-      - "3000:3000"  
-      # WebSocketサーバー
-      - "5000:5000"  
+      - "3000:3000"
+      - "7000:7000"
     volumes:
       - .:/app
     environment:
       NODE_ENV: development
     depends_on:
       - db
-
+    networks:
+      - chat_app_chat_network
   db:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: chat_app
-      # MYSQL_USER: root
-      # MYSQL_PASSWORD: root
     volumes:
       - db_data:/var/lib/mysql
-
+    networks:
+      - chat_app_chat_network
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
       - "8083:80"
     volumes:
-      - ./config.secret.inc.php:/etc/phpmyadmin/config.secret.inc.php   
+      - ./config.secret.inc.php:/etc/phpmyadmin/config.secret.inc.php
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: root
       SESSION_SECRET: ${SESSION_SECRET}
     command: >
-      sh -c "echo 'ServerName localhost' >> 
-      /etc/apache2/apache2.conf && apache2-foreground"
-
+      sh -c "echo 'ServerName localhost' >> /etc/apache2/apache2.conf && apache2-foreground"
+    networks:
+      - chat_app_chat_network
 networks:
-  default:
+  chat_app_chat_network:
     driver: bridge
-
 volumes:
   db_data:

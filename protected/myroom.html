@@ -10,9 +10,13 @@
         href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Cactus+Classical+Serif&family=IBM+Plex+Sans+JP:wght@100;200;300;400;500;600;700&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
-    
+    <link rel="stylesheet" href="/sass/myroom.css">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; connect-src 'self' ws://localhost:6000; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; require-trusted-types-for 'script'; trusted-types 'myPolicy' 'goog#html' 'AGPolicy';">
+
     <title>My Room</title>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -20,8 +24,8 @@
             <h1>Room</h1>
         </div>
         <div class="calendar">
-            <h1>Nov</h1>
-            <h2>12th</h2>
+            <h1></h1>
+            <h2></h2>
         </div>
         <div class="clock">
 
@@ -29,18 +33,28 @@
                 <circle cx="70" cy="70" r="50" stroke="black" stroke-width="5" fill="none"></circle>
                 <circle cx="210" cy="70" r="50" stroke="black" stroke-width="5" fill="none"></circle>
                 <circle cx="350" cy="70" r="50" stroke="black" stroke-width="5" fill="none"></circle>
-              </svg>
-              
+            </svg>
+
 
 
 
 
         </div>
-        <div class="form-area"></div>
+        <div class="userInfo-area"></div>
         <div class="status"></div>
-        <div class="friends"></div>
+        <div class="friends">
+            <div id="onlineUsers">
+                <h2>Online Users</h2>
+                <ul id="userList"></ul>
+            </div>
+        </div>
         <div class="icons"></div>
-        <div class="nav1"></div>
+
+        <div class="nav1">
+            <a href="/chat">Chat Room</a>
+
+        </div>
+
         <div class="nav2"></div>
     </div>
 </body>

@@ -1,5 +1,8 @@
-# ベースイメージ
-FROM node:20
+# ベースイメージとしてnode:20-bullseye-slimを使用
+FROM node:20-bullseye-slim
+
+# シェルとpingをインストール (Debianベース)	
+RUN apt-get update && apt-get install -y bash iputils-ping
 
 # 作業ディレクトリ
 WORKDIR /app
@@ -8,14 +11,18 @@ WORKDIR /app
 COPY package*.json ./
 
 # 依存関係をインストール
-RUN npm install
+RUN npm install && npm cache clean --force
+
+# wscatをグローバルインストール
+RUN npm install -g wscat
 
 # アプリケーションのソースコードをコピー
 COPY . .
 
 # コンテナがリッスンするポートを指定
 EXPOSE 3000
-EXPOSE 5000
+EXPOSE 7000
 
 # アプリケーションの起動コマンド
-CMD ["npm", "start"]
+ENTRYPOINT ["/bin/bash"]
+CMD ["npm start"]

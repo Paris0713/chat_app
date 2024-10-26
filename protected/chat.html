@@ -4,14 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
   <link
     href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Cactus+Classical+Serif&family=IBM+Plex+Sans+JP:wght@100;200;300;400;500;600;700&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&display=swap"
     rel="stylesheet">
 
+  <!-- 修正したCSP設定 -->
+  <meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  connect-src 'self' ws://chat_app-app-1:7000;
+  img-src 'self' data:;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  script-src 'self' 'unsafe-inline';
+">
+
+
+
+
   <title>WebSocket Chat Client</title>
+  <link rel="stylesheet" href="/public/sass/chat.css">
+
+  <script src="/websocket/js/chatClient.js"></script>
 </head>
 
 <body>
@@ -22,81 +39,8 @@
 
   <ul id="messages"></ul>
 
-  <style>
-    #messages {
-      list-style-type: none;
-      padding: 0;
-    }
 
-    .received {
-      background-color: #f0f0f0;
-      text-align: left;
-      padding: 10px;
-      margin: 5px;
-      border-radius: 10px;
-      max-width: 60%;
-    }
 
-    .sent {
-      background-color: #d0f0d0;
-      text-align: right;
-      padding: 10px;
-      margin: 5px;
-      border-radius: 10px;
-      max-width: 60%;
-      margin-left: auto;
-    }
-  </style>
-
-  <script>
-    const ws = new WebSocket('ws://localhost:5000');
-
-    ws.onopen = () => {
-      console.log('サーバーに接続しました');
-    };
-
-    ws.onmessage = (event) => {
-      const messages = document.getElementById('messages');
-      const message = document.createElement('li');
-      message.textContent = `サーバー: ${event.data}`;
-      message.className = 'received';
-      messages.appendChild(message);
-    };
-
-    ws.onclose = (event) => {
-      if (event.wasClean) {
-        console.log('正常に接続が切れました');
-      } else {
-        console.error('接続が予期せず切断されました');
-      }
-      alert('サーバーとの接続が切れました。');
-    };
-    // sendMessage関数
-    function sendMessage() {
-      // エラーハンドリング
-      try {
-        const input = document.getElementById('message');
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(input.value);
-          const messages = document.getElementById('messages');
-          const message = document.createElement('li');
-          message.textContent = `自分: ${input.value}`;
-          message.className = 'sent';
-          messages.appendChild(message);
-          input.value = '';
-        } else {
-          alert('接続されていません。');
-        }
-      } catch (error) {
-        console.error('メッセージ送信中にエラーが発生しました:', error);
-      }
-    }
-
-    function disconnect() {
-      ws.close();
-    }
-
-  </script>
 </body>
 
 </html>

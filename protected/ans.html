@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket チャットクライアント</title>
+    <style>
+        #chat-container {
+            display: flex;
+            height: 400px;
+        }
+        #messages {
+            flex: 3;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        #user-list {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-left: 10px;
+        }
+        #input-container {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket チャットクライアント</h1>
+    
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div id="user-list">
+            <h3>オンラインユーザー</h3>
+            <ul id="online-users"></ul>
+        </div>
+    </div>
+    
+    <div id="input-container">
+        <input type="text" id="messageInput" placeholder="メッセージを入力">
+        <button id="sendButton">送信</button>
+        <button id="disconnectButton">切断する</button>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const disconnectButton = document.getElementById('disconnectButton');
+        const onlineUsersList = document.getElementById('online-users');
+
+        let ws;
+        let userId;
+
+        function connect() {
+            ws = new WebSocket('ws://localhost:3000');
+
+            ws.onopen = () => {
+                console.log('サーバーに接続しました');
+                // ここでユーザー認証を行う（例: トークンを送信）
+                ws.send(JSON.stringify({ type: 'auth', token: 'your-auth-token' }));
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                switch (data.type) {
+                    case 'auth':
+                        userId = data.userId;
+                        console.log('認証されたユーザーID:', userId);
+                        break;
+                    case 'chat':
+                        addMessage(data.userId, data.message);
+                        break;
+                    case 'userStatus':
+                        updateUserStatus(data.userId, data.status);
+                        break;
+                }
+            };
+
+            ws.onclose = () => {
+                console.log('サーバーとの接続が切れました');
+                setTimeout(connect, 3000); // 3秒後に再接続を試みる
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocketエラー:', error);
+            };
+        }
+
+        function addMessage(userId, message) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${userId}: ${message}`;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function updateUserStatus(userId, status) {
+            let userElement = document.getElementById(`user-${userId}`);
+            if (!userElement) {
+                userElement = document.createElement('li');
+                userElement.id = `user-${userId}`;
+                onlineUsersList.appendChild(userElement);
+            }
+            userElement.textContent = `ユーザー ${userId}: ${status === 'online' ? 'オンライン' : 'オフライン'}`;
+            userElement.className = status;
+        }
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'chat', message }));
+                messageInput.value = '';
+            }
+        });
+
+        messageInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        disconnectButton.addEventListener('click', () => {
+            if (ws) {
+                ws.close();
+            }
+        });
+
+        connect();
+    </script>
+</body>
+</html>

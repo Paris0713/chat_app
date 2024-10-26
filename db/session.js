@@ -42,13 +42,12 @@ const sessionMiddleware = session({
 // req.session.userIdが存在する場合、ユーザーはログインしているとみなし
 function isLoggedIn(req, res, next) {
   console.log("セッションの状態:", req.session); 
-  if (req.session.userId) {
+  if (req.session && req.session.userId) {
     console.log("ユーザー認証済み", req.session.userId);
     return next();
   } else {
-    console.log("ユーザー認証に失敗しました");
-    // ログインしていない場合はindex.htmlにリダイレクト
-    res.redirect("/");
+    console.error("セッションが未定義です。");
+    res.status(401).send("未認証です");
   }
 }
 

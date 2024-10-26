@@ -25,7 +25,7 @@ body {
   grid-auto-flow: row;
   grid-template-areas:
     "header calendar clock"
-    "form-area status friends"
+    "userInfo-area status friends"
     "icons nav1 nav2";
     
 }
@@ -44,7 +44,7 @@ body {
   grid-area: clock;
 }
 
-.form-area {
+.userInfo-area {
   grid-area: form-area;
 }
 
